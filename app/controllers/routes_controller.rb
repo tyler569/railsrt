@@ -16,6 +16,19 @@ class RoutesController < ApplicationController
     render json: @table.matches(@ip)
   end
 
+  def post
+    routes = request.body.read()
+
+    # transform via:s to sender IP
+    request.remote_ip
+
+    # or something
+    @table.merge(routes)
+
+    ApplyRouteChangesJob.schedule table: @table
+    UpdateNeighborsJob.schedule table: @table
+  end
+
   private
 
   def set_table

@@ -7,6 +7,7 @@ class RouteTable < BaseModel
 
   def initialize
     @table = [
+      # Dummy dev data
       Route.new({
         :to => NetAddr::IPv6Net.parse("2001::/8"),
         :via => NetAddr::IPv6.parse("2002::100"),
@@ -49,5 +50,15 @@ class RouteTable < BaseModel
     ms.group_by{ |r| r.to.netmask.prefix_len }
       .max.last
       .min_by{ |r| r.metric }
+  end
+
+  def bestroutes
+    table.group_by{ |r| r.to }
+         .map{ |k, v| v.min_by{ |c| c.metric } }
+  end
+
+  def insert(route)
+    return if route.metric > 20
+    @table << route unless table.include? route
   end
 end
