@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   # patch '/route/:dest', to: 'routes#patch'
 
   get '/status', to: 'status#status'
+
+  get '/neighbors', to: 'neighbors#neighbors'
 end
