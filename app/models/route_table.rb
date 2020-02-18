@@ -9,23 +9,23 @@ class RouteTable < BaseModel
     @table = [
       # Dummy dev data
       Route.new({
-        :to => NetAddr::IPv6Net.parse("2001::/8"),
-        :via => NetAddr::IPv6.parse("2002::100"),
+        :to => IPAddr.new("2001::/8"),
+        :via => IPAddr.new("2002::100"),
         :metric => 10,
       }),
       Route.new({
-        :to => NetAddr::IPv6Net.parse("2001::/9"),
-        :via => NetAddr::IPv6.parse("2002::102"),
+        :to => IPAddr.new("2001::/9"),
+        :via => IPAddr.new("2002::102"),
         :metric => 10,
       }),
       Route.new({
-        :to => NetAddr::IPv6Net.parse("2001::/8"),
-        :via => NetAddr::IPv6.parse("2002::104"),
+        :to => IPAddr.new("2001::/8"),
+        :via => IPAddr.new("2002::104"),
         :metric => 100,
       }),
       Route.new({
-        :to => NetAddr::IPv6Net.parse("2001::/9"),
-        :via => NetAddr::IPv6.parse("2002::106"),
+        :to => IPAddr.new("2001::/9"),
+        :via => IPAddr.new("2002::106"),
         :metric => 100,
       })
     ]
@@ -47,9 +47,9 @@ class RouteTable < BaseModel
     # 2. has the longest possible prefix of the remaining
     # 3. has the lowest possible metrix of the remaining
 
-    ms.group_by{ |r| r.to.netmask.prefix_len }
+    ms.group_by{ |r| r.to.prefix }
       .max.last
-      .min_by{ |r| r.metric }
+      .min_by{ |r| r.metric } rescue nil
   end
 
   def bestroutes

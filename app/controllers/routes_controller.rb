@@ -36,10 +36,6 @@ class RoutesController < ApplicationController
   end
 
   def set_ip
-    begin
-      @ip = NetAddr::IPv6.parse params[:dest]
-    rescue NetAddr::ValidationError
-      @ip = NetAddr::IPv4.parse params[:dest]
-    end
+    @ip = IPAddr.new params[:dest]
   end
 end

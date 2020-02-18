@@ -36,5 +36,4 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'irb', require: false
-gem 'netaddr'
 gem 'active_model_serializers'

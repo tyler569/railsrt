@@ -10,7 +10,7 @@ class NeighborList < BaseModel
     @list = [
       # Dummy dev data
       Neighbor.new({
-        ip: NetAddr::IPv6.parse("5::2"),
+        ip: IPAddr.new "5::2"
       }),
     ]
   end
