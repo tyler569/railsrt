@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   
   post '/routes', to: 'routes#post'
   # patch '/route/:dest', to: 'routes#patch'
+  delete '/routes', to: 'routes#reset'
+  delete '/route/:dest', to: 'routes#del', dest: /.*/
 
   get '/status', to: 'status#status'
 

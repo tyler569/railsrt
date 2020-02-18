@@ -1,5 +1,3 @@
-require 'netaddr'
-
 class RouteTable < BaseModel
   include Singleton
 
@@ -60,5 +58,17 @@ class RouteTable < BaseModel
   def insert(route)
     return if route.metric > 20
     @table << route unless table.include? route
+  end
+
+  def include?(route)
+    table.include? route
+  end
+
+  def <<(route)
+    table << route
+  end
+
+  def as_hash
+    RouteTableSerializer.new(self).as_json[:routes]
   end
 end

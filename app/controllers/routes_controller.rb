@@ -1,8 +1,14 @@
-require 'netaddr'
+require 'json'
+
+module ASN
+  def self.my_asn
+    1
+  end
+end
 
 class RoutesController < ApplicationController
   before_action :set_table
-  before_action :set_ip, only: [:to, :to_all]
+  before_action :set_ip, only: [:to, :to_all, :del]
 
   def all
     render json: @table
@@ -17,16 +23,39 @@ class RoutesController < ApplicationController
   end
 
   def post
-    routes = request.body.read()
+    body = JSON.parse(request.body.read())
+    source = IPAddr.new request.ip
 
-    # transform via:s to sender IP
-    request.remote_ip
+    source_as = body['asn']
 
-    # or something
-    @table.merge(routes)
+    body['routes'].each do |r|
+      next if r['aspath'].include? ASN.my_asn
 
-    ApplyRouteChangesJob.schedule table: @table
-    UpdateNeighborsJob.schedule table: @table
+      route = Route.new({
+        to: IPAddr.new(r['to']),
+        metric: r['metric'] + 1,
+        via: source,
+        aspath: [source_as] + r['aspath'],
+      })
+      next if @table.include? route
+
+      @table << route
+    end
+
+    ApplyRouteChangesJob.perform_later table: @table.as_hash
+    # UpdateNeighborsJob.perform_later table: @table.as_hash
+    render json: @table
+  end
+
+  def reset
+    @table.table = []
+    render json: @table
+  end
+
+  def del
+    matches = @table.matches @ip
+    @table.table.delete_if{ |r| matches.include? r }
+    render json: @table
   end
 
   private

@@ -1,7 +1,7 @@
 require 'core_extensions/ipaddr'
 
 class RouteSerializer < ActiveModel::Serializer
-  attributes :to, :via, :metric
+  attributes :to, :via, :metric, :aspath
 
   def to
     object.to.to_sub

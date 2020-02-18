@@ -1,5 +1,3 @@
-require 'netaddr'
-
 class Neighbor < BaseModel
   attr_reader :ip
 

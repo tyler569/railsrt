@@ -1,5 +1,3 @@
-require 'netaddr'
-
 module IpRoute
   def self.kernel_routes
     rs = `ip -6 route | grep via | awk '{print $1, $3}'`

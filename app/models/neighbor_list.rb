@@ -1,5 +1,3 @@
-require 'netaddr'
-
 class NeighborList < BaseModel
   include Singleton
 
