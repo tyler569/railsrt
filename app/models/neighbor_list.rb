@@ -8,8 +8,14 @@ class NeighborList < BaseModel
     @list = [
       # Dummy dev data
       Neighbor.new({
-        ip: IPAddr.new "5::2"
+        ip: IPAddr.new("::1")
       }),
     ]
+  end
+
+  def each_neighbor(&block)
+    list.each do |n|
+      yield n
+    end
   end
 end

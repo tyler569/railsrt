@@ -43,7 +43,7 @@ class RoutesController < ApplicationController
     end
 
     ApplyRouteChangesJob.perform_later table: @table.as_hash
-    # UpdateNeighborsJob.perform_later table: @table.as_hash
+    UpdateNeighborsJob.perform_later table: @table.as_sendable
     render json: @table
   end
 

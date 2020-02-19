@@ -71,4 +71,14 @@ class RouteTable < BaseModel
   def as_hash
     RouteTableSerializer.new(self).as_json[:routes]
   end
+
+  def as_sendable
+    { 
+      :routes =>
+        RouteTableSerializer.new(self)
+          .as_json[:routes]
+          .each{ |r| r.delete :via },
+      :asn => 99,
+    }
+  end
 end
