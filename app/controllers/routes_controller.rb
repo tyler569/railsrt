@@ -1,11 +1,5 @@
 require 'json'
 
-module ASN
-  def self.my_asn
-    1
-  end
-end
-
 class RoutesController < ApplicationController
   before_action :set_table
   before_action :set_ip, only: [:to, :to_all, :del]
@@ -25,11 +19,15 @@ class RoutesController < ApplicationController
   def post
     body = JSON.parse(request.body.read())
     source = IPAddr.new request.ip
-
     source_as = body['asn']
+    did_change = false
+
+    if Config.local_asn == -1
+      render json: {:error => "Not configured"}, :status => 503
+    end
 
     body['routes'].each do |r|
-      next if r['aspath'].include? ASN.my_asn
+      next if r['aspath'].include? Config.local_asn
 
       route = Route.new({
         to: IPAddr.new(r['to']),
@@ -40,10 +38,13 @@ class RoutesController < ApplicationController
       next if @table.include? route
 
       @table << route
+      did_change = true
     end
 
-    ApplyRouteChangesJob.perform_later table: @table.as_hash
-    UpdateNeighborsJob.perform_later table: @table.as_sendable
+    if did_change
+      ApplyRouteChangesJob.perform_later table: @table.as_hash
+      UpdateNeighborsJob.perform_later table: @table.as_sendable
+    end
     render json: @table
   end
 

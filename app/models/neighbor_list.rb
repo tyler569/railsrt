@@ -5,17 +5,20 @@ class NeighborList < BaseModel
   alias :neighbors :list
 
   def initialize
-    @list = [
-      # Dummy dev data
-      Neighbor.new({
-        ip: IPAddr.new("::1")
-      }),
-    ]
+    @list = []
   end
 
   def each_neighbor(&block)
     list.each do |n|
       yield n
     end
+  end
+
+  def <<(neighbor)
+    list << neighbor
+  end
+
+  def self.each_neighbor(&block)
+    instance.each_neighbor(&block)
   end
 end

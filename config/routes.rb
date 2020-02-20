@@ -11,4 +11,7 @@ Rails.application.routes.draw do
   get '/status', to: 'status#status'
 
   get '/neighbors', to: 'neighbors#neighbors'
+
+  get '/config', to: 'config#show'
+  post '/config', to: 'config#update'
 end

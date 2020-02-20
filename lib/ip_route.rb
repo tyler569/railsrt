@@ -1,6 +1,6 @@
 module IpRoute
   def self.kernel_routes
-    rs = `ip -6 route | grep via | awk '{print $1, $3}'`
+    rs = `ip -6 route | grep via | awk '{print $1, $3}'`.split "\n"
     rs.map do |r|
       to, via = r.split.map(&:strip)
       Route.new(to: to, via: via)
@@ -15,11 +15,11 @@ module IpRoute
   end
 
   def self.add_kernel_route(route)
-    `ip route add #{route.to} via #{route.via}`
+    `sudo ip route add #{route[:to]} via #{route[:via]}`
   end
 
   def self.del_kernel_route(route)
-    `ip route del #{route.to}`
+    `sudo ip route del #{route[:to]}`
   end
 
   def self.apply_diff(diff)

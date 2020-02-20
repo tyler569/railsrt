@@ -4,29 +4,7 @@ class RouteTable < BaseModel
   attr_accessor :table
 
   def initialize
-    @table = [
-      # Dummy dev data
-      Route.new({
-        :to => IPAddr.new("2001::/8"),
-        :via => IPAddr.new("2002::100"),
-        :metric => 10,
-      }),
-      Route.new({
-        :to => IPAddr.new("2001::/9"),
-        :via => IPAddr.new("2002::102"),
-        :metric => 10,
-      }),
-      Route.new({
-        :to => IPAddr.new("2001::/8"),
-        :via => IPAddr.new("2002::104"),
-        :metric => 100,
-      }),
-      Route.new({
-        :to => IPAddr.new("2001::/9"),
-        :via => IPAddr.new("2002::106"),
-        :metric => 100,
-      })
-    ]
+    @table = []
   end
 
   def routes
