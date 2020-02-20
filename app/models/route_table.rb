@@ -50,6 +50,14 @@ class RouteTable < BaseModel
     RouteTableSerializer.new(self).as_json[:routes]
   end
 
+  def as_update
+    # TODO!!
+    RouteTableSerializer.new(self)
+      .as_json[:routes]
+      .each{ |r| r.delete(:metric) }
+      .each{ |r| r.delete(:aspath) }
+  end
+
   def as_sendable
     { 
       :routes =>

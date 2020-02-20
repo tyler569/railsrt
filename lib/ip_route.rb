@@ -1,10 +1,11 @@
 module IpRoute
   def self.kernel_routes
     rs = `ip -6 route | grep via | awk '{print $1, $3}'`.split "\n"
-    rs.map do |r|
+    rs.map { |r|
       to, via = r.split.map(&:strip)
-      Route.new(to: to, via: via)
-    end
+      to = '::/0' if to == 'default'
+      {:to => to, :via => via}
+    }
   end
   
   def self.diff(new_table)

@@ -30,7 +30,7 @@ class ConfigController < ApplicationController
       neighbors << n
     end
 
-    ApplyRouteChangesJob.perform_later :table => route_table.as_hash
+    ApplyRouteChangesJob.perform_later :table => route_table.as_update
     UpdateNeighborsJob.perform_later :table => route_table.as_sendable
 
     render json: {:good => 1}
