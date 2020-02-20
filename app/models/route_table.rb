@@ -64,7 +64,7 @@ class RouteTable < BaseModel
         RouteTableSerializer.new(self)
           .as_json[:routes]
           .each{ |r| r.delete :via },
-      :asn => 99,
+        :asn => Config.local_asn
     }
   end
 end

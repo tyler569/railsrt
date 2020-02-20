@@ -16,19 +16,21 @@ module IpRoute
   end
 
   def self.add_kernel_route(route)
+    return if route[:to] == "::1"
     `sudo ip route add #{route[:to]} via #{route[:via]}`
   end
 
   def self.del_kernel_route(route)
+    return if route[:to] == "::1"
     `sudo ip route del #{route[:to]}`
   end
 
-  def self.apply_diff(diff)
-    diff[:add].each do |r|
+  def self.apply_diff(d)
+    d[:add].each do |r|
       add_kernel_route r
     end
 
-    diff[:remove].each do |r|
+    d[:remove].each do |r|
       del_kernel_route r
     end
   end
